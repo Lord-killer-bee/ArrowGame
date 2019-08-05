@@ -1,15 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Bullet : MonoBehaviour 
 {
 	[SerializeField]
 	private float _BulletVelocity = 16f;
 
-	[SerializeField]
-	//private ParticleSystem _Splash;
-	private int collisioncounter = 0;
-
 	public int BulletNumber;
+
+	[SerializeField]
+	private GameObject _MonsterPrefab;
 
 	private void OnEnable()
 	{
@@ -24,20 +24,15 @@ public class Bullet : MonoBehaviour
 		}
 	}
 
+	private Transform SpawnLocation;
 	private void OnCollisionEnter(Collision other) 
 	{
-		//_Splash.Play();
-		if(other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Platform"))
+		SpawnLocation = other.gameObject.transform;
+
+		if(other.gameObject.CompareTag("Monster"))
 		{
-			if(other.gameObject.CompareTag("Platform"))
-			{
-				//AkSoundEngine.SetSwitch("Character", "Body", gameObject);
-				//AkSoundEngine.SetSwitch("Damage", "Object", gameObject);
-				//AkSoundEngine.PostEvent("Play_SFX_Damage", gameObject);
-
-				collisioncounter++;
-			}
-
+			Destroy(other.gameObject);
+/*
 			ContactPoint contact = other.contacts[0];
 			Quaternion rot = Quaternion.FromToRotation(Vector3.up, contact.normal);
 			rot *= Quaternion.Euler(0,90,0);
@@ -50,7 +45,7 @@ public class Bullet : MonoBehaviour
 
 			//ParticleSystem SplashEffect = Instantiate(_Splash, pos, other.gameObject.transform.rotation);
 			//ParticleSystem[] SubSplashes = SplashEffect.GetComponentsInChildren<ParticleSystem>();
-			/*
+			
 			foreach (var item in SubSplashes)
 			{
 				item.startColor = gameObject.GetComponent<Renderer>().material.color;
@@ -62,13 +57,15 @@ public class Bullet : MonoBehaviour
 					}
 				}
 			}
-			*/
-			//if(other.gameObject.CompareTag("Player"))
-			//SplashEffect.transform.SetParent(other.gameObject.transform);
-
-			if(other.gameObject.CompareTag("Player") || collisioncounter >= 2)
-			Destroy(gameObject);	
+*/	
 		}
+
+		else
+		{
+			Instantiate(_MonsterPrefab, SpawnLocation.position + new Vector3(0,1,0), SpawnLocation.rotation);
+		}
+
+		Destroy(gameObject);
 	}
 
 	
