@@ -15,3 +15,9 @@ public enum PlayerLocation
     Grounded,
     InAir
 }
+
+public enum MonsterType
+{
+    None = 0,
+    SimpleMonster
+}
