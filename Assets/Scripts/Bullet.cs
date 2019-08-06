@@ -43,7 +43,7 @@ public class Bullet : MonoBehaviour
 
 			
 
-			//ParticleSystem SplashEffect = Instantiate(_Splash, pos, other.gameObject.transform.rotation);
+			//ParticleSystem SplashEffect = Instantiate(_Splash, pos, other.gameObject.transform.rotation); 
 			//ParticleSystem[] SubSplashes = SplashEffect.GetComponentsInChildren<ParticleSystem>();
 			
 			foreach (var item in SubSplashes)
