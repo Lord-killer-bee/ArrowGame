@@ -4,11 +4,11 @@ using TMPro;
 
 namespace ArrowGame
 {
-    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(Rigidbody2D))]
     public class Unit : MonoBehaviour
     {
         public int TeamNumber;
-        protected Rigidbody _RB;
+        protected Rigidbody2D _RB;
         protected Animator _Anim;
 
         [Header("Movement")]
@@ -33,7 +33,7 @@ namespace ArrowGame
 
         protected void Awake()
         {
-            _RB = GetComponent<Rigidbody>();
+            _RB = GetComponent<Rigidbody2D>();
             _Anim = GetComponent<Animator>();
         }
 
@@ -42,12 +42,12 @@ namespace ArrowGame
             if (dir < 0)
             {
                 IsRotated = true;
-                transform.localEulerAngles = new Vector3(0, 270, 0);
+                transform.localEulerAngles = new Vector3(0, 180, 0);
             }
             else if (dir > 0)
             {
                 IsRotated = false;
-                transform.localEulerAngles = new Vector3(0, 90, 0);
+                transform.localEulerAngles = new Vector3(0, 0, 0);
             }
 
             var vel = new Vector2(dir, 0) * _MoveSpeed * mult;

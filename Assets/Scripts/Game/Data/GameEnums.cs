@@ -4,14 +4,17 @@ using UnityEngine;
 
 public enum PlayerState
 {
+    None = 0,
     Idle,
     Run,
     Jump,
-    Dash
+    Attack,
+    Death
 }
 
 public enum PlayerLocation
 {
+    None,
     Grounded,
     InAir
 }
