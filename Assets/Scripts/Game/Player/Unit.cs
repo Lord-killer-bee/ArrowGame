@@ -15,12 +15,6 @@ namespace ArrowGame
         [SerializeField]
         protected float _MoveSpeed = 8f;
 
-        [SerializeField]
-        private float _JumpSpeed = 12f;
-
-        [SerializeField]
-        protected int MaxJumps = 2;
-
         [Header("IGNORE")]
         public bool IsRotated = false;
         public bool InputAble = true;
@@ -53,11 +47,6 @@ namespace ArrowGame
             var vel = new Vector2(dir, 0) * _MoveSpeed * mult;
             vel.y = _RB.velocity.y;
             _RB.velocity = vel;
-        }
-
-        public virtual void Jump(float mult)
-        {
-            _RB.velocity = new Vector2(_RB.velocity.x, _JumpSpeed * mult);
         }
     }
 }

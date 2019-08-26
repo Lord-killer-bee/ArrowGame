@@ -23,7 +23,7 @@ namespace ArrowGame
         private GameObject _SpawnnedBullet;
 
         private PlayerState playerState = PlayerState.None;
-        private PlayerLocation playerLocation = PlayerLocation.None;
+        private PlayerLocation playerLocation = PlayerLocation.InAir;
 
         private int _CurJumps = 0;
         private DateTime _DashTimer;
@@ -41,9 +41,13 @@ namespace ArrowGame
         private int _PushForceMult = 1;
         bool _ShootTrigger = false;
 
+        public float jumpForce;         //force with which player jump
+        public float jumpTime;          //time till which we will apply jump force
+        private float jumpTimeCounter;  //time to count how long player has pressed jump key
+
         private void Update()
         {
-            GroundedTest();
+            //GroundedTest();
 
             if (InputAble)
             {
@@ -138,7 +142,37 @@ namespace ArrowGame
 
             if(playerState == PlayerState.Jump)
             {
-                Jump(1f);
+                Jump();
+            }
+        }
+
+
+        public void Jump()
+        {
+            if (playerLocation == PlayerLocation.Grounded)
+            {
+                jumpTimeCounter = jumpTime;                 //set jumpTimeCounter
+                _RB.velocity = Vector2.up * jumpForce;       //add velocity to player
+                ChangePlayerLocation(PlayerLocation.InAir);
+            }
+
+            //if Space key is pressed and isJumping is true
+            if (Input.GetKey(KeyCode.Space) && playerState == PlayerState.Jump)
+            {
+                if (jumpTimeCounter > 0)                    //we check if jumpTimeCounter is more than 0
+                {
+                    _RB.velocity = Vector2.up * jumpForce;   //add velocity
+                    jumpTimeCounter -= Time.deltaTime;      //reduce jumpTimeCounter by Time.deltaTime
+                }
+                else                                        //if jumpTimeCounter is less than 0
+                {
+                    ChangeState(PlayerState.None);          //set isJumping to false
+                }
+            }
+            Debug.Log(jumpTimeCounter);
+            if (Input.GetKeyUp(KeyCode.Space))              //if we unpress the Space key
+            {
+                ChangeState(PlayerState.None);              //set isJumping to false
             }
         }
 
@@ -155,27 +189,13 @@ namespace ArrowGame
             Time.timeScale = 1;
         }
 
-        private void GroundedTest()
-        {
-            RaycastHit hit;
-            Vector3 physicsCentre = this.transform.position + this.GetComponent<BoxCollider2D>().bounds.center;
-            Vector3 physicsLeft = physicsCentre - new Vector3(0.3f, 0, 0);
-            Vector3 physicsRight = physicsCentre + new Vector3(0.3f, 0, 0);
 
-            if ((Physics.Raycast(physicsLeft, Vector3.down, out hit, Raylength)) || (Physics.Raycast(physicsRight, Vector3.down, out hit, Raylength)))
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.gameObject.CompareTag("Platform") && playerLocation == PlayerLocation.InAir)
             {
-                if (hit.transform.gameObject.CompareTag("Platform") || hit.transform.gameObject.CompareTag("Pool"))
-                {
-                    ChangePlayerLocation(PlayerLocation.Grounded);
-                }
-                else
-                {
-                    ChangePlayerLocation(PlayerLocation.InAir);
-                }
-            }
-            else
-            {
-                ChangePlayerLocation(PlayerLocation.InAir);
+                ChangePlayerLocation(PlayerLocation.Grounded);
+                playerState = PlayerState.None;
             }
         }
 
