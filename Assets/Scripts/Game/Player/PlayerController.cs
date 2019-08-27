@@ -51,7 +51,7 @@ namespace ArrowGame
 
             if (InputAble)
             {
-                if (Input.GetAxis("Horizontal") != 0)
+                if (Input.GetAxis("Horizontal") != 0 && playerLocation == PlayerLocation.Grounded)
                 {
                     ChangeState(PlayerState.Run);
                 }
@@ -169,11 +169,15 @@ namespace ArrowGame
                     ChangeState(PlayerState.None);          //set isJumping to false
                 }
             }
-            Debug.Log(jumpTimeCounter);
+
             if (Input.GetKeyUp(KeyCode.Space))              //if we unpress the Space key
             {
                 ChangeState(PlayerState.None);              //set isJumping to false
             }
+
+            _XInput = Input.GetAxis("Horizontal");
+
+            Move(_XInput);
         }
 
         private void ResetCanMove()
