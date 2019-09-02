@@ -2,78 +2,61 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEditor;
 
 namespace ArrowGame
 {
-    public class PlayerController : Unit
+    public class PlayerController : MonoBehaviour
     {
-        [Header("Dash")]
-        [SerializeField] private float _DashMultiplier = 5f;
-        [SerializeField] private float _DashKnockBackMultiplier = 5f;
-        [SerializeField] private float _DashDuration = 0.1f;
-        [SerializeField] private float _DashingCooldown = 1f;
+        [Header("Movement parameters")]
+        [SerializeField] private float maxMoveSpeed = 8f;
+        [SerializeField] private float moveAcceleration = 8f;
+        private float currentMoveSpeed = 0;
 
-        [Space(10)]
-        [Header("Shooting")]
-        [SerializeField] private GameObject _BulletPrefab;
-        [SerializeField] private Transform _BulletSpawn;
-        [SerializeField] private float _ShootingCooldown = 1f;
-        [SerializeField] private float _PushBackForce = 1500f;
+        [Header("Jump parameters")]
+        [SerializeField] private float jumpForce;
 
-        private GameObject _SpawnnedBullet;
+        [SerializeField] private float overlapCircleRadius = 2.5f;
+ 
+        private Rigidbody2D _RB;
+        private Animator _Anim;
 
         private PlayerState playerState = PlayerState.None;
         private PlayerLocation playerLocation = PlayerLocation.InAir;
 
-        private int _CurJumps = 0;
-        private DateTime _DashTimer;
-        private DateTime _ShootTimer;
+        private Collider2D[] hitColliders;
 
-        private bool _DashAvailable = true;
-        private bool _ShootAvailable = true;
 
-        private float _XInput = 0f;
-        private float _RTrigger = 0f;
-        public bool _CanMove = true;
+        [SerializeField] private Text stateText;
 
-        public float Raylength = 1f;
+        protected void Awake()
+        {
+            _RB = GetComponent<Rigidbody2D>();
+            _Anim = GetComponent<Animator>();
+        }
 
-        private int _PushForceMult = 1;
-        bool _ShootTrigger = false;
-
-        public float jumpForce;         //force with which player jump
-        public float jumpTime;          //time till which we will apply jump force
-        private float jumpTimeCounter;  //time to count how long player has pressed jump key
+        private void Start()
+        {
+            Application.targetFrameRate = 60;
+            _RB.interpolation = RigidbodyInterpolation2D.Interpolate;
+        }
 
         private void Update()
         {
-            //GroundedTest();
+            PrintCurrentState();
+            CheckIfGrounded();
 
-            if (InputAble)
+            if (Input.GetButtonDown("Jump") && playerLocation == PlayerLocation.Grounded)
             {
-                if (Input.GetAxis("Horizontal") != 0 && playerLocation == PlayerLocation.Grounded)
-                {
-                    ChangeState(PlayerState.Run);
-                }
-
-                if (Input.GetButtonDown("Jump"))
-                {
-                    ChangeState(PlayerState.Jump);
-                }
-
-                if (Input.GetButtonUp("Fire"))
-                {
-                    ChangeState(PlayerState.Attack);
-                }
-
-                if (!_ShootAvailable)
-                {
-                    if ((DateTime.Now - _ShootTimer).Milliseconds >= _ShootingCooldown)
-                    {
-                        _ShootAvailable = true;
-                    }
-                }
-
+                ChangeState(PlayerState.Jump);
+            }
+            else if (Input.GetAxis("Horizontal") != 0 && playerLocation == PlayerLocation.Grounded)
+            {
+                ChangeState(PlayerState.Run);
+            }
+            else if(Input.GetAxis("Horizontal") == 0 && playerLocation == PlayerLocation.Grounded)
+            {
+                ChangeState(PlayerState.Idle);
             }
 
         }
@@ -82,6 +65,8 @@ namespace ArrowGame
         {
             if (playerState == state)
                 return;
+
+            OnExitState(state);
 
             switch (state)
             {
@@ -105,6 +90,16 @@ namespace ArrowGame
             playerState = state;
         }
 
+        private void OnExitState(PlayerState state)
+        {
+            switch (state)
+            {
+                case PlayerState.Run:
+                    currentMoveSpeed = 0;
+                    break;
+            }
+        }
+
         void ChangePlayerLocation(PlayerLocation location)
         {
             if (playerLocation == location)
@@ -113,8 +108,6 @@ namespace ArrowGame
             switch (location)
             {
                 case PlayerLocation.Grounded:
-                    _Anim.Play("Idle");
-                    _CurJumps = 0;
                     break;
                 case PlayerLocation.InAir:
                     break;
@@ -125,152 +118,88 @@ namespace ArrowGame
 
         private void FixedUpdate()
         {
-            if (_CanMove && playerState == PlayerState.Run)
+            switch (playerState)
             {
-                _XInput = Input.GetAxis("Horizontal");
+                case PlayerState.Run:
+                    Move(Input.GetAxis("Horizontal"));
+                    break;
+                case PlayerState.Jump:
+                    Jump();
+                    break;
 
-                Move(_XInput);
-                if(_XInput != 0)
-                {
-                    _Anim.Play("Run");
-                }
-                else
-                {
-                    _Anim.Play("Idle");
-                }
-            }
-
-            if(playerState == PlayerState.Jump)
-            {
-                Jump();
             }
         }
 
+        public void Move(float dir)
+        {
+            if (currentMoveSpeed < maxMoveSpeed)
+            {
+                currentMoveSpeed += moveAcceleration * 0.05f;
+            }
+            else if (currentMoveSpeed >= maxMoveSpeed)
+            {
+                currentMoveSpeed = maxMoveSpeed;
+            }
+
+            if (dir < 0)
+            {
+                transform.localEulerAngles = new Vector3(0, 180, 0);
+            }
+            else if (dir > 0)
+            {
+                transform.localEulerAngles = new Vector3(0, 0, 0);
+            }
+
+            var vel = new Vector2(dir, 0) * currentMoveSpeed * Time.fixedDeltaTime;
+            vel.y = _RB.velocity.y;
+            _RB.velocity = vel;
+        }
 
         public void Jump()
         {
             if (playerLocation == PlayerLocation.Grounded)
             {
-                jumpTimeCounter = jumpTime;                 //set jumpTimeCounter
-                _RB.velocity = Vector2.up * jumpForce;       //add velocity to player
+                _RB.velocity = Vector2.up * jumpForce;   
                 ChangePlayerLocation(PlayerLocation.InAir);
             }
 
-            //if Space key is pressed and isJumping is true
-            if (Input.GetKey(KeyCode.Space) && playerState == PlayerState.Jump)
+            if(_RB.velocity.y < 0)
             {
-                if (jumpTimeCounter > 0)                    //we check if jumpTimeCounter is more than 0
+                _Anim.Play("JumpFall");
+            }
+
+            Move(Input.GetAxis("Horizontal"));
+        }
+
+        private void CheckIfGrounded()
+        {
+            hitColliders = Physics2D.OverlapCircleAll(transform.position, overlapCircleRadius);
+            int platformCount = 0;
+
+            for (int i = 0; i < hitColliders.Length; i++)
+            {
+                if (hitColliders[i].CompareTag("Platform"))
                 {
-                    _RB.velocity = Vector2.up * jumpForce;   //add velocity
-                    jumpTimeCounter -= Time.deltaTime;      //reduce jumpTimeCounter by Time.deltaTime
-                }
-                else                                        //if jumpTimeCounter is less than 0
-                {
-                    ChangeState(PlayerState.None);          //set isJumping to false
+                    platformCount++;
                 }
             }
 
-            if (Input.GetKeyUp(KeyCode.Space))              //if we unpress the Space key
-            {
-                ChangeState(PlayerState.None);              //set isJumping to false
-            }
-
-            _XInput = Input.GetAxis("Horizontal");
-
-            Move(_XInput);
-        }
-
-        private void ResetCanMove()
-        {
-            _CanMove = true;
-            //_Dashing = false;
-        }
-
-
-
-        private void ResetTimeScale()
-        {
-            Time.timeScale = 1;
-        }
-
-
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            if (collision.gameObject.CompareTag("Platform") && playerLocation == PlayerLocation.InAir)
-            {
+            if(platformCount > 0)
                 ChangePlayerLocation(PlayerLocation.Grounded);
-                playerState = PlayerState.None;
-            }
+            else
+                ChangePlayerLocation(PlayerLocation.InAir);
         }
 
-
-        #region Unused code
-#if false
-        
-        /*public bool _Dashing = false;
-        private void Dash()
+        private void PrintCurrentState()
         {
-            if (_XInput == 0)
-            {
-                if (IsRotated)
-                    _XInput = -1;
-                else
-                    _XInput = 1;
-            }
+            stateText.transform.parent.position = transform.position + new Vector3(0, 4.25f, 0);
+            stateText.text = playerState.ToString() + "\n" + playerLocation.ToString();
+        }
 
-            Move(_XInput, _DashMultiplier);
-            _CanMove = false;
-            _Dashing = true;
-            Invoke("ResetCanMove", _DashDuration);
-
-            _DashAvailable = false;
-            _DashTimer = DateTime.Now;
-        }*/
-
-        /*private void Shoot(GameObject Bullet)
+        private void OnDrawGizmos()
         {
-            if (_ShootAvailable)
-            {
-                _SpawnnedBullet = Instantiate(Bullet, _BulletSpawn.position, _BulletSpawn.rotation);
-
-                _ShootTimer = DateTime.Now;
-                _ShootAvailable = false;
-            }
-        }*/
-
-        /*private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.gameObject.tag == "Platform")
-            {
-                RayCastJumpTest();
-            }
-        }*/
-
-        /*private void RayCastJumpTest()
-        {
-            RaycastHit hit;
-            Vector3 physicsCentre = this.transform.position + this.GetComponent<BoxCollider2D>().bounds.center;
-            Vector3 physicsLeft = physicsCentre - new Vector3(0.3f, 0, 0);
-            Vector3 physicsRight = physicsCentre + new Vector3(0.3f, 0, 0);
-
-            if ((Physics.Raycast(physicsLeft, Vector3.down, out hit, Raylength)) || (Physics.Raycast(physicsRight, Vector3.down, out hit, Raylength)))
-            {
-                if (hit.transform.gameObject.CompareTag("Platform") || hit.transform.gameObject.CompareTag("Pool") || hit.transform.gameObject.CompareTag("TuTPool"))
-                {
-                    ChangePlayerLocation(PlayerLocation.Grounded);
-                }
-                else
-                {
-                    ChangePlayerLocation(PlayerLocation.InAir);
-                }
-            }
-            else
-            {
-                ChangePlayerLocation(PlayerLocation.InAir);
-            }
-        }*/
-#endif
-        #endregion
-
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, overlapCircleRadius);
+        }
     }
 }
