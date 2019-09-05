@@ -32,7 +32,7 @@ namespace ArrowGame
         /// </summary>
         protected override void OnMonsterDestroyed()
         {
-            
+            //Broadcast an event to the player to activate an effect
         }
 
         private void FixedUpdate()
