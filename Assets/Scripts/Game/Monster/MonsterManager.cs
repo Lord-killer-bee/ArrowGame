@@ -23,6 +23,10 @@ namespace ArrowGame {
             GameEventManager.Instance.RemoveListener<CreateMonsterEvent>(CreateMonsterCallback);
         }
 
+        /// <summary>
+        /// Creates a monster when the player misses a bullet
+        /// </summary>
+        /// <param name="eve"></param>
         private void CreateMonsterCallback(CreateMonsterEvent eve)
         {
             Instantiate(_MonsterPrefab, eve.spawnLocation, Quaternion.identity);
