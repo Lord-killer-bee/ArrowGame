@@ -22,5 +22,6 @@ public enum PlayerLocation
 public enum MonsterType
 {
     None = 0,
-    SimpleMonster
+    SimpleMonster,
+    MovingMonster
 }
