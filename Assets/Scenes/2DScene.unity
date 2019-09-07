@@ -4750,6 +4750,9 @@ MonoBehaviour:
   moveAcceleration: 3000
   jumpForce: 50
   overlapCircleRadius: 3
+  GunTransform: {fileID: 1024340640}
+  Bullet: {fileID: 7919800413864710031, guid: 36eb382519a0b3943bf3ca65888d67fa, type: 3}
+  isRotated: 0
   stateText: {fileID: 1460573064}
 --- !u!50 &1742581572
 Rigidbody2D:

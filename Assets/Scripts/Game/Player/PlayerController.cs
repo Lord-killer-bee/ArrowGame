@@ -195,7 +195,7 @@ namespace ArrowGame
 
             for (int i = 0; i < hitColliders.Length; i++)
             {
-                if (hitColliders[i].CompareTag("Platform"))
+                if (hitColliders[i].CompareTag("Platform") || hitColliders[i].CompareTag("Monster"))
                 {
                     platformCount++;
                 }

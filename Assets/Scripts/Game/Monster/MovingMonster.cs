@@ -13,7 +13,7 @@ namespace ArrowGame
         #region parameters
 
         [SerializeField] private float moveSpeed;
-        [SerializeField] private float oscillateTime;
+        [SerializeField] private float moveDistance;
 
         [SerializeField] private bool Horizontal = true;
         [SerializeField] private bool Vertical = false;
@@ -27,7 +27,7 @@ namespace ArrowGame
         {
             monsterType = MonsterType.MovingMonster;
 
-            moveStartTime = DateTime.Now;
+            InitialLocation = transform.position;
         }
 
         /// <summary>
@@ -38,12 +38,12 @@ namespace ArrowGame
             //Broadcast an event to the player to activate an effect
         }
 
-        
+        private Vector3 InitialLocation;
         private void FixedUpdate()
         {
             if (!monsterInitialized)
                 return;
-
+/*
             if((DateTime.Now - moveStartTime).TotalMilliseconds >= oscillateTime * 1000)
             {
                 moveDirection *= -1;
@@ -51,6 +51,16 @@ namespace ArrowGame
                 MonsterScale.x *= -1;
                 transform.localScale = MonsterScale;
                 moveStartTime = DateTime.Now;
+            }
+*/
+            if(Vector3.Distance(transform.position, InitialLocation) >= moveDistance)
+            {
+                moveDirection *= -1;
+                Vector3 MonsterScale = transform.localScale;
+                MonsterScale.x *= -1;
+                transform.localScale = MonsterScale;
+
+                InitialLocation = transform.position;
             }
 
             Vector2 vel;

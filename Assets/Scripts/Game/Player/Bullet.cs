@@ -14,7 +14,6 @@ namespace ArrowGame
 
         private void OnEnable()
         {
-            print("Bullet");
             GetComponent<Rigidbody2D>().velocity = transform.up * _BulletVelocity;
         }
 
@@ -27,7 +26,7 @@ namespace ArrowGame
         }
 
         private Transform SpawnLocation;
-        private void OnCollisionEnter(Collision other)
+        private void OnCollisionEnter2D(Collision2D other)
         {
             SpawnLocation = other.gameObject.transform;
 
@@ -39,11 +38,12 @@ namespace ArrowGame
             else
             {
                 GameEventManager.Instance.TriggerSyncEvent(new ArrowGame.InGameEvents.CreateMonsterEvent(SpawnLocation.position + new Vector3(0, 1, 0)));
-                //Instantiate(_MonsterPrefab, SpawnLocation.position + new Vector3(0,1,0), SpawnLocation.rotation);
             }
 
             Destroy(gameObject);
+            
         }
+
 
 
 
