@@ -17,6 +17,9 @@ namespace ArrowGame
         [SerializeField] private float jumpForce;
 
         [SerializeField] private float overlapCircleRadius = 2.5f;
+
+        [SerializeField] private Transform GunTransform;
+        [SerializeField] private GameObject Bullet;
  
         private Rigidbody2D _RB;
         private Animator _Anim;
@@ -25,6 +28,8 @@ namespace ArrowGame
         private PlayerLocation playerLocation = PlayerLocation.InAir;
 
         private Collider2D[] hitColliders;
+
+        public bool isRotated = false;
 
 
         [SerializeField] private Text stateText;
@@ -57,6 +62,11 @@ namespace ArrowGame
             else if(Input.GetAxis("Horizontal") == 0 && playerLocation == PlayerLocation.Grounded)
             {
                 ChangeState(PlayerState.Idle);
+            }
+
+            if(Input.GetButtonDown("Fire"))
+            {
+                Shoot();
             }
 
         }
@@ -144,10 +154,12 @@ namespace ArrowGame
             if (dir < 0)
             {
                 transform.localEulerAngles = new Vector3(0, 180, 0);
+                isRotated = true;
             }
             else if (dir > 0)
             {
                 transform.localEulerAngles = new Vector3(0, 0, 0);
+                isRotated = false;
             }
 
             var vel = new Vector2(dir, 0) * currentMoveSpeed * Time.fixedDeltaTime;
@@ -169,6 +181,11 @@ namespace ArrowGame
             }
 
             Move(Input.GetAxis("Horizontal"));
+        }
+
+        public void Shoot()
+        {
+            Instantiate(Bullet, GunTransform.position, GunTransform.rotation);
         }
 
         private void CheckIfGrounded()

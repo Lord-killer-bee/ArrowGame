@@ -7,23 +7,22 @@ namespace ArrowGame
     public class Bullet : MonoBehaviour
     {
         [SerializeField]
-        private float _BulletVelocity = 16f;
-
-        public int BulletNumber;
+        private float _BulletVelocity = 50f;
 
         //[SerializeField]
         //private GameObject _MonsterPrefab;
 
         private void OnEnable()
         {
-            GetComponent<Rigidbody>().velocity = transform.forward * _BulletVelocity;
+            print("Bullet");
+            GetComponent<Rigidbody2D>().velocity = transform.up * _BulletVelocity;
         }
 
         private void Update()
         {
-            if (gameObject.GetComponent<Rigidbody>().velocity == new Vector3(0, 0, 0))
+            if (gameObject.GetComponent<Rigidbody2D>().velocity == new Vector2(0, 0))
             {
-                Destroy(gameObject);
+               Destroy(gameObject);
             }
         }
 
