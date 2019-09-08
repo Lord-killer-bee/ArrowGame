@@ -16,21 +16,31 @@ namespace ArrowGame
         [Header("Jump parameters")]
         [SerializeField] private float jumpForce;
 
-        [SerializeField] private float overlapCircleRadius = 2.5f;
-
         [SerializeField] private Transform GunTransform;
         [SerializeField] private GameObject Bullet;
  
         private Rigidbody2D _RB;
+        private Collider2D _collider;
         private Animator _Anim;
+
+        public bool isRotated = false;
 
         private PlayerState playerState = PlayerState.None;
         private PlayerLocation playerLocation = PlayerLocation.InAir;
 
-        private Collider2D[] hitColliders;
+        private RaycastHit2D[] groundedHits;
+        private RaycastHit2D[] almostGroundedHits;
 
-        public bool isRotated = false;
+        private float jumpBufferTime = 0.75f;
+        private DateTime jumpHitTime;
+        private bool jumpBufferActive = false;
 
+        private float groundedCheckLength = 0;
+        private float almostGroundedCheckLength = 0;
+        private bool almostGrounded = false;
+        private bool jumpStored = false;
+
+        private bool phasing = false;
 
         [SerializeField] private Text stateText;
 
@@ -38,6 +48,10 @@ namespace ArrowGame
         {
             _RB = GetComponent<Rigidbody2D>();
             _Anim = GetComponent<Animator>();
+            _collider = GetComponent<Collider2D>();
+
+            groundedCheckLength = _collider.bounds.size.y / 2 + 0.1f;
+            almostGroundedCheckLength = _collider.bounds.size.y / 2 + 7f;
         }
 
         private void Start()
@@ -50,8 +64,9 @@ namespace ArrowGame
         {
             PrintCurrentState();
             CheckIfGrounded();
+            CheckIfAlmostGrounded();
 
-            if (Input.GetButtonDown("Jump") && playerLocation == PlayerLocation.Grounded)
+            if (Input.GetButtonDown("Jump") && (playerLocation == PlayerLocation.Grounded || almostGrounded))
             {
                 ChangeState(PlayerState.Jump);
             }
@@ -59,7 +74,7 @@ namespace ArrowGame
             {
                 ChangeState(PlayerState.Run);
             }
-            else if(Input.GetAxis("Horizontal") == 0 && playerLocation == PlayerLocation.Grounded)
+            else if(Input.GetAxis("Horizontal") == 0 && playerLocation == PlayerLocation.Grounded && !jumpBufferActive && !jumpStored)
             {
                 ChangeState(PlayerState.Idle);
             }
@@ -67,6 +82,17 @@ namespace ArrowGame
             if(Input.GetButtonDown("Fire"))
             {
                 Shoot();
+            }
+
+            switch (playerState)
+            {
+                case PlayerState.Run:
+                    Move(Input.GetAxis("Horizontal"));
+                    break;
+                case PlayerState.Jump:
+                    Jump();
+                    break;
+
             }
 
         }
@@ -126,20 +152,6 @@ namespace ArrowGame
             playerLocation = location;
         }
 
-        private void FixedUpdate()
-        {
-            switch (playerState)
-            {
-                case PlayerState.Run:
-                    Move(Input.GetAxis("Horizontal"));
-                    break;
-                case PlayerState.Jump:
-                    Jump();
-                    break;
-
-            }
-        }
-
         public void Move(float dir)
         {
             if (currentMoveSpeed < maxMoveSpeed)
@@ -171,13 +183,25 @@ namespace ArrowGame
         {
             if (playerLocation == PlayerLocation.Grounded)
             {
-                _RB.velocity = Vector2.up * jumpForce;   
+                _RB.velocity = Vector2.up * jumpForce;
+                jumpHitTime = DateTime.Now;
+                jumpBufferActive = true;
+                jumpStored = false;
                 ChangePlayerLocation(PlayerLocation.InAir);
             }
 
-            if(_RB.velocity.y < 0)
+            if(almostGrounded && Input.GetButtonDown("Jump"))
+            {
+                jumpStored = true;
+            }
+
+            if (_RB.velocity.y < 0)
             {
                 _Anim.Play("JumpFall");
+            }
+            else if(_RB.velocity.y > 0)
+            {
+                _Anim.Play("JumpStart");
             }
 
             Move(Input.GetAxis("Horizontal"));
@@ -190,33 +214,91 @@ namespace ArrowGame
 
         private void CheckIfGrounded()
         {
-            hitColliders = Physics2D.OverlapCircleAll(transform.position, overlapCircleRadius);
+            groundedHits = Physics2D.RaycastAll(transform.position, Vector2.down, groundedCheckLength);
+
             int platformCount = 0;
 
-            for (int i = 0; i < hitColliders.Length; i++)
+            for (int i = 0; i < groundedHits.Length; i++)
             {
-                if (hitColliders[i].CompareTag("Platform"))
+                if (groundedHits[i].collider.CompareTag("Platform"))
                 {
                     platformCount++;
                 }
             }
 
-            if(platformCount > 0)
-                ChangePlayerLocation(PlayerLocation.Grounded);
+            if (!jumpBufferActive)
+            {
+                if (platformCount > 0)
+                    ChangePlayerLocation(PlayerLocation.Grounded);
+                else
+                    ChangePlayerLocation(PlayerLocation.InAir);
+            }
+
+            if(jumpBufferActive && (DateTime.Now - jumpHitTime).TotalMilliseconds >= jumpBufferTime * 1000)
+            {
+                jumpBufferActive = false;
+            }
+        }
+
+        private void CheckIfAlmostGrounded()
+        {
+            if (playerState == PlayerState.Jump && !jumpBufferActive)
+            {
+                almostGroundedHits = Physics2D.RaycastAll(transform.position, Vector2.down, almostGroundedCheckLength);
+
+                int platformCount = 0;
+
+                for (int i = 0; i < almostGroundedHits.Length; i++)
+                {
+                    if (almostGroundedHits[i].collider.CompareTag("Platform"))
+                    {
+                        platformCount++;
+                    }
+                }
+
+                if (platformCount > 0)
+                {
+                    almostGrounded = true;
+                }
+            }
             else
-                ChangePlayerLocation(PlayerLocation.InAir);
+            {
+                almostGrounded = false;
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D collider)
+        {
+            if (collider.CompareTag("PlatformBottom"))
+            {
+                _collider.isTrigger = true;
+            }
+            else if (collider.CompareTag("Platform"))
+            {
+                phasing = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D collider)
+        {
+            if (collider.CompareTag("Platform") && phasing)
+            {
+                _collider.isTrigger = false;
+                phasing = false;
+            }
+            else if (collider.CompareTag("PlatformBottom") && !phasing)
+            {
+                _collider.isTrigger = false;
+            }
         }
 
         private void PrintCurrentState()
         {
             stateText.transform.parent.position = transform.position + new Vector3(0, 4.25f, 0);
-            stateText.text = playerState.ToString() + "\n" + playerLocation.ToString();
-        }
+            stateText.text = playerState.ToString() + "\n" + playerLocation.ToString() + "\n" + "AG : " + almostGrounded;
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, overlapCircleRadius);
+            Debug.DrawLine(transform.position, transform.position - new Vector3(0, groundedCheckLength, 0), Color.red);
+            Debug.DrawLine(transform.position + new Vector3(0.01f, 0, 0), transform.position - new Vector3(0.01f, almostGroundedCheckLength, 0), Color.blue);
         }
     }
 }
