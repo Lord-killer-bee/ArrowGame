@@ -21,7 +21,7 @@ namespace ArrowGame
         #endregion
 
         private int moveDirection = 1;// 1 means right, -1 means left
-        private DateTime moveStartTime;
+        private Vector3 InitialLocation;
 
         protected override void InitializeMonster()
         {
@@ -38,21 +38,11 @@ namespace ArrowGame
             //Broadcast an event to the player to activate an effect
         }
 
-        private Vector3 InitialLocation;
         private void FixedUpdate()
         {
             if (!monsterInitialized)
                 return;
-/*
-            if((DateTime.Now - moveStartTime).TotalMilliseconds >= oscillateTime * 1000)
-            {
-                moveDirection *= -1;
-                Vector3 MonsterScale = transform.localScale;
-                MonsterScale.x *= -1;
-                transform.localScale = MonsterScale;
-                moveStartTime = DateTime.Now;
-            }
-*/
+
             if(Vector3.Distance(transform.position, InitialLocation) >= moveDistance)
             {
                 moveDirection *= -1;

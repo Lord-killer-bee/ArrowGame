@@ -13,18 +13,18 @@ namespace ArrowGame
         #region parameters
 
         [SerializeField] private float moveSpeed;
-        [SerializeField] private float oscillateTime;
+        [SerializeField] private float moveDistance;
 
         #endregion
 
         private int moveDirection = 1;// 1 means right, -1 means left
-        private DateTime moveStartTime;
+        private Vector3 InitialLocation;
 
         protected override void InitializeMonster()
         {
             monsterType = MonsterType.SimpleMonster;
 
-            moveStartTime = DateTime.Now;
+            InitialLocation = transform.position;
         }
 
         /// <summary>
@@ -35,19 +35,40 @@ namespace ArrowGame
             //Broadcast an event to the player to activate an effect
         }
 
+        public float Raylength = 5f;
+        public Transform RayStart;
+        public Transform RayEnd;
+        private float DoubleSpeed = 1;
+
         private void FixedUpdate()
         {
             if (!monsterInitialized)
                 return;
 
-            if((DateTime.Now - moveStartTime).TotalMilliseconds >= oscillateTime * 1000)
+            if(Vector3.Distance(transform.position, InitialLocation) >= moveDistance)
             {
                 moveDirection *= -1;
-                moveStartTime = DateTime.Now;
-            }
+                Vector3 MonsterScale = transform.localScale;
+                MonsterScale.x *= -1;
+                transform.localScale = MonsterScale;
 
-            var vel = new Vector2(moveDirection, 0) * moveSpeed * Time.fixedDeltaTime;
+                InitialLocation = transform.position;
+            }
+           
+            var vel = new Vector2(moveDirection, 0) * moveSpeed * DoubleSpeed * Time.fixedDeltaTime;
             rigidBody.velocity = vel;
+
+            RaycastHit2D hit = Physics2D.Raycast(RayStart.position, RayEnd.position - RayStart.position, Vector3.Distance(RayEnd.position, RayStart.position));
+            Debug.DrawLine(RayStart.position, RayEnd.position, Color.red);
+            
+            if(hit.collider.tag == "Player")
+            {
+                DoubleSpeed = 3;
+            }
+            else
+            {
+                DoubleSpeed = 1;
+            }
         }
     }
 }
