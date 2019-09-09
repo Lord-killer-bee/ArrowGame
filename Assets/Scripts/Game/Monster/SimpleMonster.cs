@@ -48,12 +48,7 @@ namespace ArrowGame
 
             if(Vector3.Distance(transform.position, InitialLocation) >= moveDistance*DistanceMultiplier)
             {
-                moveDirection *= -1;
-                Vector3 MonsterScale = transform.localScale;
-                MonsterScale.x *= -1;
-                transform.localScale = MonsterScale;
-
-                InitialLocation = transform.position;
+                FlipTheMonster();
             }
            
             var vel = new Vector2(moveDirection, 0) * moveSpeed * SpeedMultiplier * Time.fixedDeltaTime;
@@ -76,6 +71,38 @@ namespace ArrowGame
                 SpeedMultiplier = 1;
                 DistanceMultiplier = 1;
             } 
+
+            OnPlatformCheck();
+        }
+
+        private void FlipTheMonster()
+        {
+            moveDirection *= -1;
+            Vector3 MonsterScale = transform.localScale;
+            MonsterScale.x *= -1;
+            transform.localScale = MonsterScale;
+
+            InitialLocation = transform.position;
+        }
+
+        private bool Flipped = false;
+        private void OnPlatformCheck()
+        {
+            Vector3 Offset = new Vector3(2,0,0);
+            RaycastHit2D HitLeft = Physics2D.Raycast(transform.position + Offset, Vector2.down, Raylength);
+            RaycastHit2D HitRight = Physics2D.Raycast(transform.position - Offset, Vector2.down, Raylength);
+            Debug.DrawRay(transform.position + Offset, Vector2.down * Raylength, Color.red);
+            Debug.DrawRay(transform.position - Offset, Vector2.down * Raylength, Color.red);
+
+            if((HitLeft.collider == null || HitRight.collider == null) && !Flipped)
+            {
+                FlipTheMonster();
+                Flipped = true;
+            }
+            if(HitLeft.collider != null && HitRight.collider != null)
+            {
+                Flipped = false;
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D other) 
@@ -86,12 +113,7 @@ namespace ArrowGame
             }
             else
             {
-                moveDirection *= -1;
-                Vector3 MonsterScale = transform.localScale;
-                MonsterScale.x *= -1;
-                transform.localScale = MonsterScale;
-
-                InitialLocation = transform.position;
+                FlipTheMonster();
             }
         }
     }

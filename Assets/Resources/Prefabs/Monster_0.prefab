@@ -225,6 +225,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 200
   moveDistance: 20
-  Raylength: 100
+  Raylength: 3
   RayStart: {fileID: 632197279}
   RayEnd: {fileID: 1302169771}
