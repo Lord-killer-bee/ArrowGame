@@ -38,14 +38,15 @@ namespace ArrowGame
         public float Raylength = 5f;
         public Transform RayStart;
         public Transform RayEnd;
-        private float DoubleSpeed = 1;
+        private float SpeedMultiplier = 1;
+        private float DistanceMultiplier = 1;
 
         private void FixedUpdate()
         {
             if (!monsterInitialized)
                 return;
 
-            if(Vector3.Distance(transform.position, InitialLocation) >= moveDistance)
+            if(Vector3.Distance(transform.position, InitialLocation) >= moveDistance*DistanceMultiplier)
             {
                 moveDirection *= -1;
                 Vector3 MonsterScale = transform.localScale;
@@ -55,19 +56,42 @@ namespace ArrowGame
                 InitialLocation = transform.position;
             }
            
-            var vel = new Vector2(moveDirection, 0) * moveSpeed * DoubleSpeed * Time.fixedDeltaTime;
+            var vel = new Vector2(moveDirection, 0) * moveSpeed * SpeedMultiplier * Time.fixedDeltaTime;
+            vel.y = rigidBody.velocity.y;
             rigidBody.velocity = vel;
 
             RaycastHit2D hit = Physics2D.Raycast(RayStart.position, RayEnd.position - RayStart.position, Vector3.Distance(RayEnd.position, RayStart.position));
             Debug.DrawLine(RayStart.position, RayEnd.position, Color.red);
             
-            if(hit.collider.tag == "Player")
+            if(hit.collider != null)
             {
-                DoubleSpeed = 3;
+                if(hit.collider.tag == "Player")
+                {
+                    SpeedMultiplier = 3;
+                    DistanceMultiplier = 10;
+                }
             }
             else
             {
-                DoubleSpeed = 1;
+                SpeedMultiplier = 1;
+                DistanceMultiplier = 1;
+            } 
+        }
+
+        private void OnCollisionEnter2D(Collision2D other) 
+        {
+            if(other.collider.tag == "Player" || other.collider.tag == "Platform")
+            {
+
+            }
+            else
+            {
+                moveDirection *= -1;
+                Vector3 MonsterScale = transform.localScale;
+                MonsterScale.x *= -1;
+                transform.localScale = MonsterScale;
+
+                InitialLocation = transform.position;
             }
         }
     }
