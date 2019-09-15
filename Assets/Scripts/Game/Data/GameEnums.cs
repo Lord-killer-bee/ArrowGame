@@ -25,3 +25,18 @@ public enum MonsterType
     SimpleMonster,
     MovingMonster
 }
+
+public enum PlayerAbilityType
+{
+    None = 0,
+    SpeedMultiplier,
+    DoubleJump,
+    Invincibility
+}
+
+public enum AbilityActivationMode
+{
+    None,
+    AutoActivation,
+    ManualActivation
+}

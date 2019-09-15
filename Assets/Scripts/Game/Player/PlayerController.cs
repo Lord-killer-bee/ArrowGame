@@ -3,6 +3,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEditor;
+using System.Collections.Generic;
+using Core;
+using ArrowGame.InGameEvents;
 
 namespace ArrowGame
 {
@@ -36,11 +39,14 @@ namespace ArrowGame
         private bool jumpBufferActive = false;
 
         private float groundedCheckLength = 0;
+        private float secondaryGroundedCheckOffset = 0;
         private float almostGroundedCheckLength = 0;
         private bool almostGrounded = false;
         private bool jumpStored = false;
 
         private bool phasing = false;
+
+        private AbilityConfig abilityConfig;
 
         [SerializeField] private Text stateText;
 
@@ -51,7 +57,12 @@ namespace ArrowGame
             _collider = GetComponent<Collider2D>();
 
             groundedCheckLength = _collider.bounds.size.y / 2 + 0.1f;
+            secondaryGroundedCheckOffset = _collider.bounds.size.x / 2 + 3f;
             almostGroundedCheckLength = _collider.bounds.size.y / 2 + 7f;
+
+            abilityConfig = Resources.Load<AbilityConfig>(GameConsts.AbilityConfigPath);
+
+            GameEventManager.Instance.AddListener<GrantAbilityEvent>(OnAbilityGranted);
         }
 
         private void Start()
@@ -60,11 +71,21 @@ namespace ArrowGame
             _RB.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
 
+        private void OnDestroy()
+        {
+            GameEventManager.Instance.RemoveListener<GrantAbilityEvent>(OnAbilityGranted);
+        }
+
         private void Update()
         {
             PrintCurrentState();
             CheckIfGrounded();
             CheckIfAlmostGrounded();
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                GameEventManager.Instance.TriggerAsyncEvent(new GrantAbilityEvent(PlayerAbilityType.DoubleJump));
+            }
 
             if (Input.GetButtonDown("Jump") && (playerLocation == PlayerLocation.Grounded || almostGrounded))
             {
@@ -144,6 +165,10 @@ namespace ArrowGame
             switch (location)
             {
                 case PlayerLocation.Grounded:
+                    if (IsAbilityActive(PlayerAbilityType.DoubleJump))
+                    {
+                        GetComponent<DoubleJumpAbility>().RestoreJumps();
+                    }
                     break;
                 case PlayerLocation.InAir:
                     break;
@@ -188,6 +213,19 @@ namespace ArrowGame
                 jumpBufferActive = true;
                 jumpStored = false;
                 ChangePlayerLocation(PlayerLocation.InAir);
+
+                if (IsAbilityActive(PlayerAbilityType.DoubleJump))
+                {
+                    GetComponent<DoubleJumpAbility>().RegisterJump();
+                }
+            }
+            else if (playerLocation == PlayerLocation.InAir && Input.GetButtonDown("Jump"))
+            {
+                if (IsAbilityActive(PlayerAbilityType.DoubleJump) && GetComponent<DoubleJumpAbility>().currentJumps > 0)
+                {
+                    _RB.velocity = Vector2.up * jumpForce;
+                    GetComponent<DoubleJumpAbility>().RegisterJump();
+                }
             }
 
             if(almostGrounded && Input.GetButtonDown("Jump"))
@@ -214,9 +252,21 @@ namespace ArrowGame
 
         private void CheckIfGrounded()
         {
+            int platformCount = 0;
+
+            //Primary grounded test
             groundedHits = Physics2D.RaycastAll(transform.position, Vector2.down, groundedCheckLength);
 
-            int platformCount = 0;
+            for (int i = 0; i < groundedHits.Length; i++)
+            {
+                if (groundedHits[i].collider.CompareTag("Platform") || groundedHits[i].collider.CompareTag("Monster"))
+                {
+                    platformCount++;
+                }
+            }
+
+            //Secondary grounded test
+            groundedHits = Physics2D.RaycastAll(transform.position - (isRotated ? -1 : 1) * new Vector3(secondaryGroundedCheckOffset, 0, 0), Vector2.down, groundedCheckLength);
 
             for (int i = 0; i < groundedHits.Length; i++)
             {
@@ -244,9 +294,19 @@ namespace ArrowGame
         {
             if (playerState == PlayerState.Jump && !jumpBufferActive)
             {
+                int platformCount = 0;
+
                 almostGroundedHits = Physics2D.RaycastAll(transform.position, Vector2.down, almostGroundedCheckLength);
 
-                int platformCount = 0;
+                for (int i = 0; i < almostGroundedHits.Length; i++)
+                {
+                    if (almostGroundedHits[i].collider.CompareTag("Platform"))
+                    {
+                        platformCount++;
+                    }
+                }
+
+                almostGroundedHits = Physics2D.RaycastAll(transform.position - (isRotated ? -1 : 1) * new Vector3(secondaryGroundedCheckOffset, 0, 0), Vector2.down, almostGroundedCheckLength);
 
                 for (int i = 0; i < almostGroundedHits.Length; i++)
                 {
@@ -266,6 +326,93 @@ namespace ArrowGame
                 almostGrounded = false;
             }
         }
+
+        #region Abilities related
+
+        /// <summary>
+        /// Adds an ability to the active ability list.
+        /// If an ability is already active then that ability duration is restored
+        /// </summary>
+        /// <param name="eve"></param>
+        private void OnAbilityGranted(GrantAbilityEvent eve)
+        {
+            PlayerAbility ability = null;
+
+            if (IsAbilityGranted(eve.abilityType))
+            {
+                //TODO :: Add the duration to the active ability
+            }
+            else
+            {
+                switch (eve.abilityType)
+                {
+                    case PlayerAbilityType.SpeedMultiplier:
+                        ability = gameObject.AddComponent<SpeedMultiplierAbility>();
+                        break;
+                    case PlayerAbilityType.DoubleJump:
+                        ability = gameObject.AddComponent<DoubleJumpAbility>();
+                        break;
+                    case PlayerAbilityType.Invincibility:
+                        ability = gameObject.AddComponent<InvincibilityAbility>();
+                        break;
+                }
+            }
+
+            ability.InitializeAbility(abilityConfig);
+        }
+
+        private bool IsAbilityActive(PlayerAbilityType abilityType)
+        {
+            switch (abilityType)
+            {
+                case PlayerAbilityType.SpeedMultiplier:
+                    if (!GetComponent<SpeedMultiplierAbility>())
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return GetComponent<SpeedMultiplierAbility>().isActive;
+                    }
+                case PlayerAbilityType.DoubleJump:
+                    if (!GetComponent<DoubleJumpAbility>())
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return GetComponent<DoubleJumpAbility>().isActive;
+                    }
+                case PlayerAbilityType.Invincibility:
+                    if (!GetComponent<InvincibilityAbility>())
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return GetComponent<InvincibilityAbility>().isActive;
+                    }
+            }
+
+            return false;
+        }
+
+        private bool IsAbilityGranted(PlayerAbilityType abilityType)
+        {
+            switch (abilityType)
+            {
+                case PlayerAbilityType.SpeedMultiplier:
+                    return (GetComponent<SpeedMultiplierAbility>() != null);
+                case PlayerAbilityType.DoubleJump:
+                    return (GetComponent<DoubleJumpAbility>() != null);
+                case PlayerAbilityType.Invincibility:
+                    return (GetComponent<InvincibilityAbility>() != null);
+            }
+
+            return false;
+        }
+
+        #endregion
 
         private void OnTriggerEnter2D(Collider2D collider)
         {
@@ -298,7 +445,10 @@ namespace ArrowGame
             stateText.text = playerState.ToString() + "\n" + playerLocation.ToString() + "\n" + "AG : " + almostGrounded;
 
             Debug.DrawLine(transform.position, transform.position - new Vector3(0, groundedCheckLength, 0), Color.red);
-            Debug.DrawLine(transform.position + new Vector3(0.01f, 0, 0), transform.position - new Vector3(0.01f, almostGroundedCheckLength, 0), Color.blue);
+            Debug.DrawLine(transform.position - new Vector3(0.05f, 0, 0), transform.position - new Vector3(0.05f, almostGroundedCheckLength, 0), Color.blue);
+
+            Debug.DrawLine(transform.position - (isRotated ? -1 : 1) * new Vector3(secondaryGroundedCheckOffset, 0, 0), transform.position - new Vector3((isRotated ? -1 : 1) * secondaryGroundedCheckOffset, groundedCheckLength, 0), Color.red);
+            Debug.DrawLine(transform.position - (isRotated ? -1 : 1) * new Vector3(secondaryGroundedCheckOffset - 0.05f, 0, 0), transform.position - new Vector3((isRotated ? -1 : 1) * (secondaryGroundedCheckOffset - 0.05f), almostGroundedCheckLength, 0), Color.blue);
         }
     }
 }

@@ -17,4 +17,14 @@ namespace ArrowGame.InGameEvents
             this.spawnLocation = spawnLocation;
         }
     }
+
+    public class GrantAbilityEvent : GameEvent
+    {
+        public PlayerAbilityType abilityType;
+
+        public GrantAbilityEvent(PlayerAbilityType abilityType)
+        {
+            this.abilityType = abilityType;
+        }
+    }
 }
