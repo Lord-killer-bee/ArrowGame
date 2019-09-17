@@ -23,7 +23,8 @@ public enum MonsterType
 {
     None = 0,
     SimpleMonster,
-    MovingMonster
+    MovingMonster,
+    BlockingMonster
 }
 
 public enum PlayerAbilityType
