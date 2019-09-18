@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,16 +7,28 @@ namespace ArrowGame
 {
     public class SpeedMultiplierAbility : PlayerAbility
     {
-        // Start is called before the first frame update
-        void Start()
+        public override void InitializeAbility(AbilityConfig abilityConfig)
         {
+            this.abilityConfig = abilityConfig;
 
+            abilityType = PlayerAbilityType.SpeedMultiplier;
+            abilityActivationMode = abilityConfig.SpeedMultiplierActivationType;
+
+            abilityDuration = abilityConfig.SpeedMultiplierDuration;
+            
+            base.InitializeAbility(abilityConfig);
         }
 
-        // Update is called once per frame
-        void Update()
+        public override void ActivateAbility()
         {
+            player.MultiplyMoveSpeed(abilityConfig.SpeedMultiplier);
+            base.ActivateAbility();
+        }
 
+        public override void DeactivateAbility()
+        {
+            player.MultiplyMoveSpeed(1);
+            base.DeactivateAbility();
         }
     }
 }

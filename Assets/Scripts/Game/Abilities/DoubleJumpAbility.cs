@@ -8,9 +8,6 @@ namespace ArrowGame
     public class DoubleJumpAbility : PlayerAbility
     {
         public float currentJumps { get; private set; }
-        private float abilityDuration;
-
-        private DateTime abilityTimeTracker;
 
         public override void InitializeAbility(AbilityConfig abilityConfig)
         {
@@ -19,10 +16,14 @@ namespace ArrowGame
             abilityType = PlayerAbilityType.DoubleJump;
             abilityActivationMode = abilityConfig.DoubleJumpActivationType;
 
-            currentJumps = abilityConfig.JumpCount;
             abilityDuration = abilityConfig.JumpAbilityDuration;
-            abilityTimeTracker = DateTime.Now;
             base.InitializeAbility(abilityConfig);
+        }
+
+        public override void ActivateAbility()
+        {
+            currentJumps = abilityConfig.JumpCount;
+            base.ActivateAbility();
         }
 
         public void RegisterJump()
@@ -33,14 +34,6 @@ namespace ArrowGame
         public void RestoreJumps()
         {
             currentJumps = abilityConfig.JumpCount;
-        }
-
-        private void Update()
-        {
-            if((DateTime.Now - abilityTimeTracker).TotalMilliseconds >= abilityDuration * 1000)
-            {
-                DeactivateAbility();
-            }
         }
     }
 }

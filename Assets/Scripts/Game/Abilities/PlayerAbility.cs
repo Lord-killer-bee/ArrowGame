@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +18,9 @@ namespace ArrowGame
         protected PlayerController player;
         protected AbilityConfig abilityConfig;
 
+        protected float abilityDuration;
+        private DateTime abilityTimeTracker;
+
         public virtual void InitializeAbility(AbilityConfig abilityConfig)
         {
             player = GetComponent<PlayerController>();
@@ -28,12 +32,26 @@ namespace ArrowGame
         public virtual void ActivateAbility()
         {
             isActive = true;
+            abilityTimeTracker = DateTime.Now;
+        }
+
+        private void Update()
+        {
+            if ((DateTime.Now - abilityTimeTracker).TotalMilliseconds >= abilityDuration * 1000)
+            {
+                DeactivateAbility();
+            }
         }
 
         public virtual void DeactivateAbility()
         {
             isActive = false;
             Destroy(this);
+        }
+
+        public void RestoreTheAbilityDuration()
+        {
+            abilityTimeTracker = DateTime.Now;
         }
     }
 }

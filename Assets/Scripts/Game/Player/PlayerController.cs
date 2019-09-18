@@ -15,6 +15,7 @@ namespace ArrowGame
         [SerializeField] private float maxMoveSpeed = 8f;
         [SerializeField] private float moveAcceleration = 8f;
         private float currentMoveSpeed = 0;
+        private float moveSpeedMultiplier = 1;
 
         [Header("Jump parameters")]
         [SerializeField] private float jumpForce;
@@ -84,7 +85,7 @@ namespace ArrowGame
 
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                GameEventManager.Instance.TriggerAsyncEvent(new GrantAbilityEvent(PlayerAbilityType.DoubleJump));
+                GameEventManager.Instance.TriggerAsyncEvent(new GrantAbilityEvent(PlayerAbilityType.SpeedMultiplier));
             }
 
             if (Input.GetButtonDown("Jump") && (playerLocation == PlayerLocation.Grounded || almostGrounded))
@@ -179,13 +180,13 @@ namespace ArrowGame
 
         public void Move(float dir)
         {
-            if (currentMoveSpeed < maxMoveSpeed)
+            if (currentMoveSpeed < maxMoveSpeed * moveSpeedMultiplier)
             {
-                currentMoveSpeed += moveAcceleration * 0.05f;
+                currentMoveSpeed += moveAcceleration * moveSpeedMultiplier * 0.05f;
             }
-            else if (currentMoveSpeed >= maxMoveSpeed)
+            else if (currentMoveSpeed >= maxMoveSpeed * moveSpeedMultiplier)
             {
-                currentMoveSpeed = maxMoveSpeed;
+                currentMoveSpeed = maxMoveSpeed * moveSpeedMultiplier;
             }
 
             if (dir < 0)
@@ -340,7 +341,20 @@ namespace ArrowGame
 
             if (IsAbilityGranted(eve.abilityType))
             {
-                //TODO :: Add the duration to the active ability
+                switch (eve.abilityType)
+                {
+                    case PlayerAbilityType.SpeedMultiplier:
+                        ability = gameObject.GetComponent<SpeedMultiplierAbility>();
+                        break;
+                    case PlayerAbilityType.DoubleJump:
+                        ability = gameObject.GetComponent<DoubleJumpAbility>();
+                        break;
+                    case PlayerAbilityType.Invincibility:
+                        ability = gameObject.GetComponent<InvincibilityAbility>();
+                        break;
+                }
+
+                ability.RestoreTheAbilityDuration();
             }
             else
             {
@@ -356,9 +370,8 @@ namespace ArrowGame
                         ability = gameObject.AddComponent<InvincibilityAbility>();
                         break;
                 }
+                ability.InitializeAbility(abilityConfig);
             }
-
-            ability.InitializeAbility(abilityConfig);
         }
 
         private bool IsAbilityActive(PlayerAbilityType abilityType)
@@ -410,6 +423,11 @@ namespace ArrowGame
             }
 
             return false;
+        }
+
+        public void MultiplyMoveSpeed(float mult)
+        {
+            moveSpeedMultiplier = mult;
         }
 
         #endregion

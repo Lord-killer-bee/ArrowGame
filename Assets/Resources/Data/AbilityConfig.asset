@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doubleJumpActivationType: 1
   jumpCount: 2
-  jumpAbilityDuration: 2
+  jumpAbilityDuration: 50
   speedMultiplierActivationType: 1
   speedMultiplier: 2
   speedMultiplierDuration: 2
