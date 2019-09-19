@@ -107,10 +107,10 @@ TextureImporter:
       name: Black_Sheep_Faint_0
       rect:
         serializedVersion: 2
-        x: 83
-        y: 27
-        width: 259
-        height: 242
+        x: 0
+        y: 0
+        width: 366.66666
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,7 +118,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 063c22300efef7648a1fb8b698bc17de
+      spriteID: 6d2ebb369af86c3479f8a42de7018f99
       vertices: []
       indices: 
       edges: []
@@ -127,10 +127,10 @@ TextureImporter:
       name: Black_Sheep_Faint_1
       rect:
         serializedVersion: 2
-        x: 421
-        y: 40
-        width: 259
-        height: 229
+        x: 366
+        y: 0
+        width: 366.66666
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -138,7 +138,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 13c1794cd692d95499b919fe9acd9c02
+      spriteID: 559e02c0f34d04a40b4d119212c03530
       vertices: []
       indices: 
       edges: []
@@ -147,10 +147,10 @@ TextureImporter:
       name: Black_Sheep_Faint_2
       rect:
         serializedVersion: 2
-        x: 676
-        y: 226
-        width: 8
-        height: 9
+        x: 732
+        y: 0
+        width: 366.66666
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,7 +158,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fa33d6060568fd64b8e2a7a0f1400d16
+      spriteID: 475712db7cdab694bbcff6510044d258
       vertices: []
       indices: 
       edges: []
@@ -167,10 +167,10 @@ TextureImporter:
       name: Black_Sheep_Faint_3
       rect:
         serializedVersion: 2
-        x: 746
-        y: 35
-        width: 288
-        height: 196
+        x: 1098
+        y: 0
+        width: 352
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,7 +178,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 045f00c15fdcf4844b9a205baf569a52
+      spriteID: d834912fa2bd60b4f8c860ce6528e267
       vertices: []
       indices: 
       edges: []
@@ -187,10 +187,10 @@ TextureImporter:
       name: Black_Sheep_Faint_4
       rect:
         serializedVersion: 2
-        x: 330
-        y: 211
-        width: 13
-        height: 8
+        x: 1446
+        y: 0
+        width: 353
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -198,7 +198,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f61cee9ad82cec14ca2cc0ca5223c849
+      spriteID: 0e9df438d671fa34a9d1ea69288b270e
       vertices: []
       indices: 
       edges: []
@@ -207,10 +207,10 @@ TextureImporter:
       name: Black_Sheep_Faint_5
       rect:
         serializedVersion: 2
-        x: 680
-        y: 213
-        width: 9
-        height: 7
+        x: 1799
+        y: 0
+        width: 397
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,67 +218,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 08814b75784e2c74ea4dbf246ead1ba2
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Black_Sheep_Faint_6
-      rect:
-        serializedVersion: 2
-        x: 1107
-        y: 31
-        width: 283
-        height: 182
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b590075054aac734fbc193658ed52350
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Black_Sheep_Faint_7
-      rect:
-        serializedVersion: 2
-        x: 1461
-        y: 25
-        width: 302
-        height: 177
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4b86aebb48320074197acef47f4f69f3
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Black_Sheep_Faint_8
-      rect:
-        serializedVersion: 2
-        x: 1810
-        y: 25
-        width: 306
-        height: 173
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 363eb995c701d554e85aca2408e834d8
+      spriteID: 376b9d20de0a411408af105ede949f7b
       vertices: []
       indices: 
       edges: []

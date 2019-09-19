@@ -12,6 +12,14 @@ public enum PlayerState
     Death
 }
 
+public enum MonsterState
+{
+    None = 0,
+    Run,
+    Attack,
+    Dizzy
+}
+
 public enum PlayerLocation
 {
     None,
@@ -24,7 +32,8 @@ public enum MonsterType
     None = 0,
     SimpleMonster,
     MovingMonster,
-    BlockingMonster
+    BlockingMonster,
+    RammingMonster
 }
 
 public enum PlayerAbilityType

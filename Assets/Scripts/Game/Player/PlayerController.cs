@@ -260,7 +260,7 @@ namespace ArrowGame
 
             for (int i = 0; i < groundedHits.Length; i++)
             {
-                if (groundedHits[i].collider.CompareTag("Platform") || groundedHits[i].collider.CompareTag("Monster"))
+                if (groundedHits[i].collider.CompareTag("Platform") || groundedHits[i].collider.CompareTag("Monster") || groundedHits[i].collider.CompareTag("Block"))
                 {
                     platformCount++;
                 }

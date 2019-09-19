@@ -105,10 +105,10 @@ TextureImporter:
         serializedVersion: 2
         x: 27
         y: 26
-        width: 286
-        height: 228
+        width: 289
+        height: 250
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -120,61 +120,21 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Black_Sheep_Dizzy_1
-      rect:
-        serializedVersion: 2
-        x: 237
-        y: 253
-        width: 23
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 252dad7ea8736e94a817d9a66ae9b563
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Black_Sheep_Dizzy_2
       rect:
         serializedVersion: 2
         x: 355
         y: 26
-        width: 286
-        height: 237
+        width: 287
+        height: 247
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
       spriteID: 2da5a812b32a19143b7c1f82988a977d
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Black_Sheep_Dizzy_3
-      rect:
-        serializedVersion: 2
-        x: 581
-        y: 251
-        width: 23
-        height: 21
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8520964765b28804dbfdd1af53a95c52
       vertices: []
       indices: 
       edges: []
@@ -188,7 +148,7 @@ TextureImporter:
         width: 286
         height: 249
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
