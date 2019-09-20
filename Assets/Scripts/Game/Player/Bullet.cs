@@ -35,23 +35,19 @@ namespace ArrowGame
                 Destroy(other.gameObject);
             }
 
+            if (other.gameObject.CompareTag("Platform"))
+            {
+                GameEventManager.Instance.TriggerSyncEvent(new ArrowGame.InGameEvents.CreateMonsterEvent(SpawnLocation.position + new Vector3(0, 1, 0)));
+            }
+
             if (other.gameObject.CompareTag("RammingMonster"))
             {
                 if(other.gameObject.GetComponent<RammingMonster>().CanDie == true)
                 Destroy(other.gameObject);
             }
 
-            else
-            {
-                GameEventManager.Instance.TriggerSyncEvent(new ArrowGame.InGameEvents.CreateMonsterEvent(SpawnLocation.position + new Vector3(0, 1, 0)));
-            }
-
             Destroy(gameObject);
             
         }
-
-
-
-
     }
 }
