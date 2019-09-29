@@ -27,4 +27,16 @@ namespace ArrowGame.InGameEvents
             this.abilityType = abilityType;
         }
     }
+
+    public class ActivationPointInRangeEvent : GameEvent
+    {
+        public ActivationPoint activationPoint;
+        public bool inRange;
+
+        public ActivationPointInRangeEvent(ActivationPoint activationPoint, bool inRange)
+        {
+            this.activationPoint = activationPoint;
+            this.inRange = inRange;
+        }
+    }
 }

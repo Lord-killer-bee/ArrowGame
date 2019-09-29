@@ -63,7 +63,7 @@ namespace ArrowGame
 
             abilityConfig = Resources.Load<AbilityConfig>(GameConsts.AbilityConfigPath);
 
-            GameEventManager.Instance.AddListener<GrantAbilityEvent>(OnAbilityGranted);
+            AddListeners();
         }
 
         private void Start()
@@ -74,7 +74,19 @@ namespace ArrowGame
 
         private void OnDestroy()
         {
+            RemoveListeners();
+        }
+
+        void AddListeners()
+        {
+            GameEventManager.Instance.AddListener<GrantAbilityEvent>(OnAbilityGranted);
+            GameEventManager.Instance.AddListener<ActivationPointInRangeEvent>(OnActivationPointStatusRecieved);
+        }
+
+        void RemoveListeners()
+        {
             GameEventManager.Instance.RemoveListener<GrantAbilityEvent>(OnAbilityGranted);
+            GameEventManager.Instance.RemoveListener<ActivationPointInRangeEvent>(OnActivationPointStatusRecieved);
         }
 
         private void Update()
@@ -430,7 +442,14 @@ namespace ArrowGame
             moveSpeedMultiplier = mult;
         }
 
+        #endregion
 
+        #region Level related
+
+        private void OnActivationPointStatusRecieved(ActivationPointInRangeEvent e)
+        {
+            //TODO:: Activation point status is recieved, assign an input button to trigger it from this script
+        }
 
         #endregion
 
