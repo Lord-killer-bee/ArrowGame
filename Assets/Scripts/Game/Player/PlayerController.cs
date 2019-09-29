@@ -85,7 +85,7 @@ namespace ArrowGame
 
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                GameEventManager.Instance.TriggerAsyncEvent(new GrantAbilityEvent(PlayerAbilityType.SpeedMultiplier));
+                GameEventManager.Instance.TriggerAsyncEvent(new GrantAbilityEvent(PlayerAbilityType.Invincibility));
             }
 
             if (Input.GetButtonDown("Jump") && (playerLocation == PlayerLocation.Grounded || almostGrounded))
@@ -429,6 +429,8 @@ namespace ArrowGame
         {
             moveSpeedMultiplier = mult;
         }
+
+
 
         #endregion
 

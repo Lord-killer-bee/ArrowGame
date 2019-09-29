@@ -11,5 +11,12 @@ namespace ArrowGame
         public const string AbilityConfigPath = "Data/AbilityConfig";
 
         #endregion
+
+        #region Layers
+
+        public const int InvincibilityLayer = 9;
+        public const int PlayerLayer = 10;
+
+        #endregion
     }
 }

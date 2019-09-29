@@ -1556,11 +1556,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bc0a7445d57eb24eba5a66789729198, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0
-  moveDistance: 0
+  moveSpeed: 200
+  moveDistance: 5
   Raylength: 5
-  RayStart: {fileID: 0}
-  RayEnd: {fileID: 0}
+  RayStart: {fileID: 1459353938}
+  RayEnd: {fileID: 2016559305}
+  CanDie: 0
+  DizzyTime: 5
 --- !u!1 &640048033
 GameObject:
   m_ObjectHideFlags: 0
@@ -2872,7 +2874,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1024340640}
   - component: {fileID: 1024340639}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4390,6 +4392,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &1459353938 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 632197279, guid: dbb4f361bc059824cb8b8435923b12a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 496057276}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1460573062
 GameObject:
   m_ObjectHideFlags: 0
@@ -5270,7 +5278,7 @@ GameObject:
   - component: {fileID: 1742581572}
   - component: {fileID: 1742581574}
   - component: {fileID: 1742581573}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -6279,6 +6287,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &2016559305 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1302169771, guid: dbb4f361bc059824cb8b8435923b12a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 496057276}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2050623833
 GameObject:
   m_ObjectHideFlags: 0
@@ -6516,7 +6530,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2105796262}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GunTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
