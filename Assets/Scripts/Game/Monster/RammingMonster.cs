@@ -169,7 +169,7 @@ namespace ArrowGame
 
         private void OnCollisionEnter2D(Collision2D other) 
         {
-            if(other.collider.tag == "Platform" || other.collider.tag == "Bullet")
+            if(other.collider.tag == "Platform" || other.collider.tag == "Bullet" || other.collider.tag == "Player")
             {
 
             }

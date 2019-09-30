@@ -33,7 +33,9 @@ public enum MonsterType
     SimpleMonster,
     MovingMonster,
     BlockingMonster,
-    RammingMonster
+    RammingMonster,
+    InvincibleMonster,
+    InvincibleMinion
 }
 
 public enum PlayerAbilityType

@@ -7,6 +7,9 @@ TagManager:
   - Platform
   - Monster
   - PlatformBottom
+  - Block
+  - RammingMonster
+  - InvincibleMonster
   layers:
   - Default
   - TransparentFX

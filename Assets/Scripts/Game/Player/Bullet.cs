@@ -46,6 +46,12 @@ namespace ArrowGame
                 Destroy(other.gameObject);
             }
 
+            if (other.gameObject.CompareTag("InvincibleMonster"))
+            {
+                if(other.gameObject.GetComponent<InvincibleMonster>().CanDie == true)
+                Destroy(other.gameObject);
+            }
+
             Destroy(gameObject);
             
         }
