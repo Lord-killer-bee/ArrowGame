@@ -18,5 +18,11 @@ namespace ArrowGame
         public const int PlayerLayer = 10;
 
         #endregion
+
+        #region Input keys
+
+        public const string JUMP_CODE = "Jump";
+
+        #endregion
     }
 }

@@ -22,7 +22,7 @@ namespace ArrowGame
 
         private void CheckForPlayerInRange()
         {
-            overlapCollider = Physics2D.OverlapCircle(transform.position, checkRadius, GameConsts.PlayerLayer);
+            overlapCollider = Physics2D.OverlapCircle(transform.position, checkRadius);
 
             if (overlapCollider == null)
             {
@@ -47,6 +47,11 @@ namespace ArrowGame
 
             enableSprite.SetActive(enable);
             disableSprite.SetActive(!enable);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawWireSphere(transform.position, checkRadius);
         }
 
         public void ActivatePoint()
