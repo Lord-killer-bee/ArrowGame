@@ -39,14 +39,4 @@ namespace ArrowGame.InGameEvents
             this.inRange = inRange;
         }
     }
-
-    public class InputKeyPressed : GameEvent
-    {
-        string keyCode;
-
-        public InputKeyPressed(string keyCode)
-        {
-            this.keyCode = keyCode;
-        }
-    }
 }

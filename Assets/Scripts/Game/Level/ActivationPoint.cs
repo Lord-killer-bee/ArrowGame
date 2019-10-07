@@ -56,7 +56,7 @@ namespace ArrowGame
 
         public void ActivatePoint()
         {
-
+            //TODO :: Activate the stored monster
         }
 
     }

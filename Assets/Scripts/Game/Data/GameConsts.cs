@@ -21,7 +21,12 @@ namespace ArrowGame
 
         #region Input keys
 
+        public const string HORIZONTAL_CODE = "Horizontal";
+        public const string VERTICAL_CODE = "Vertical";
+        public const string FIRE_CODE = "Fire";
         public const string JUMP_CODE = "Jump";
+        public const string ABILITY_ACTIVATE_CODE = "AbilityActivate";
+        public const string ABILITY_SWITCH_CODE = "AbilitySwitch";
 
         #endregion
     }

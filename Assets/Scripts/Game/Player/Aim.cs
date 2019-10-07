@@ -18,8 +18,8 @@ namespace ArrowGame
         {
             if (InputAble)
             {
-                float xInput = Input.GetAxisRaw("Horizontal");
-                float yInput = Input.GetAxisRaw("Vertical");
+                float xInput = Input.GetAxisRaw(GameConsts.HORIZONTAL_CODE);
+                float yInput = Input.GetAxisRaw(GameConsts.VERTICAL_CODE);
 
                 if (GetComponent<PlayerController>().isRotated)
                 {

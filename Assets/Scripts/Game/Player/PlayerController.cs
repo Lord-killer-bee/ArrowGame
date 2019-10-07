@@ -45,6 +45,9 @@ namespace ArrowGame
         private bool almostGrounded = false;
         private bool jumpStored = false;
 
+        private bool activationPointInRange = false;
+        private ActivationPoint inRangeActivationPoint;
+
         private bool phasing = false;
 
         private AbilityConfig abilityConfig;
@@ -100,28 +103,33 @@ namespace ArrowGame
                 GameEventManager.Instance.TriggerAsyncEvent(new GrantAbilityEvent(PlayerAbilityType.Invincibility));
             }
 
-            if (Input.GetButtonDown("Jump") && (playerLocation == PlayerLocation.Grounded || almostGrounded))
+            if (Input.GetButtonDown(GameConsts.JUMP_CODE) && (playerLocation == PlayerLocation.Grounded || almostGrounded))
             {
                 ChangeState(PlayerState.Jump);
             }
-            else if (Input.GetAxis("Horizontal") != 0 && playerLocation == PlayerLocation.Grounded)
+            else if (Input.GetAxis(GameConsts.HORIZONTAL_CODE) != 0 && playerLocation == PlayerLocation.Grounded)
             {
                 ChangeState(PlayerState.Run);
             }
-            else if(Input.GetAxis("Horizontal") == 0 && playerLocation == PlayerLocation.Grounded && !jumpBufferActive && !jumpStored)
+            else if(Input.GetAxis(GameConsts.HORIZONTAL_CODE) == 0 && playerLocation == PlayerLocation.Grounded && !jumpBufferActive && !jumpStored)
             {
                 ChangeState(PlayerState.Idle);
             }
 
-            if(Input.GetButtonDown("Fire"))
+            if(Input.GetButtonDown(GameConsts.FIRE_CODE))
             {
                 Shoot();
+            }
+
+            if (Input.GetButtonDown(GameConsts.ABILITY_ACTIVATE_CODE))
+            {
+                inRangeActivationPoint.ActivatePoint();
             }
 
             switch (playerState)
             {
                 case PlayerState.Run:
-                    Move(Input.GetAxis("Horizontal"));
+                    Move(Input.GetAxis(GameConsts.HORIZONTAL_CODE));
                     break;
                 case PlayerState.Jump:
                     Jump();
@@ -232,7 +240,7 @@ namespace ArrowGame
                     GetComponent<DoubleJumpAbility>().RegisterJump();
                 }
             }
-            else if (playerLocation == PlayerLocation.InAir && Input.GetButtonDown("Jump"))
+            else if (playerLocation == PlayerLocation.InAir && Input.GetButtonDown(GameConsts.JUMP_CODE))
             {
                 if (IsAbilityActive(PlayerAbilityType.DoubleJump) && GetComponent<DoubleJumpAbility>().currentJumps > 0)
                 {
@@ -241,7 +249,7 @@ namespace ArrowGame
                 }
             }
 
-            if(almostGrounded && Input.GetButtonDown("Jump"))
+            if(almostGrounded && Input.GetButtonDown(GameConsts.JUMP_CODE))
             {
                 jumpStored = true;
             }
@@ -255,7 +263,7 @@ namespace ArrowGame
                 _Anim.Play("JumpStart");
             }
 
-            Move(Input.GetAxis("Horizontal"));
+            Move(Input.GetAxis(GameConsts.HORIZONTAL_CODE));
         }
 
         public void Shoot()
@@ -448,7 +456,16 @@ namespace ArrowGame
 
         private void OnActivationPointStatusRecieved(ActivationPointInRangeEvent e)
         {
-            //TODO:: Activation point status is recieved, assign an input button to trigger it from this script
+            activationPointInRange = e.inRange;
+
+            if (e.inRange)
+            {
+                inRangeActivationPoint = e.activationPoint;
+            }
+            else
+            {
+                inRangeActivationPoint = null;
+            }
         }
 
         #endregion
