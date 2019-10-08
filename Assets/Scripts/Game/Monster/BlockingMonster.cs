@@ -36,7 +36,11 @@ namespace ArrowGame
 
         private void OnCollisionEnter2D(Collision2D other) 
         {
-          
+            if(other.collider.tag == GameConsts.BULLET_TAG)
+            {
+                //TODO : Capture this monster
+                Destroy(gameObject);
+            }
         }
     }
 }

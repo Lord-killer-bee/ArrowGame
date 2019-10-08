@@ -109,7 +109,7 @@ namespace ArrowGame
             
             if(hit.collider != null)
             {
-                if(hit.collider.tag == "Player")
+                if(hit.collider.tag == GameConsts.PLAYER_TAG)
                 {
                     SpeedMultiplier = 3;
                     DistanceMultiplier = 10;
@@ -169,7 +169,7 @@ namespace ArrowGame
 
         private void OnCollisionEnter2D(Collision2D other) 
         {
-            if(other.collider.tag == "Platform" || other.collider.tag == "Bullet" || other.collider.tag == "Player")
+            if(other.collider.tag == GameConsts.PLATFORM_TAG || other.collider.tag == GameConsts.BULLET_TAG || other.collider.tag == GameConsts.PLAYER_TAG)
             {
 
             }
@@ -185,6 +185,12 @@ namespace ArrowGame
                 }
             }
             
+            if(other.collider.tag == GameConsts.BULLET_TAG)
+            {
+                if (CanDie)
+                    Destroy(gameObject);
+            }
+
         }
     }
 }

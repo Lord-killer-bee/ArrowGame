@@ -30,7 +30,7 @@ namespace ArrowGame
                 return;
             }
 
-            if (overlapCollider.tag == "Player")
+            if (overlapCollider.tag == GameConsts.PLAYER_TAG)
             {
                 ToggleActivationPoint(true);
             }

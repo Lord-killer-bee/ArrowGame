@@ -19,6 +19,17 @@ namespace ArrowGame
 
         #endregion
 
+        #region Tags
+
+        public const string BULLET_TAG = "Bullet";
+        public const string MONSTER_TAG = "Monster";
+        public const string PLATFORM_TAG = "Platform";
+        public const string PLATFORM_BOTTOM_TAG = "PlatformBottom";
+        public const string PLAYER_TAG = "Player";
+        public const string BLOCK_TAG = "Block";
+
+        #endregion
+
         #region Input keys
 
         public const string HORIZONTAL_CODE = "Horizontal";

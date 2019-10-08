@@ -97,6 +97,7 @@ namespace ArrowGame
             if((HitLeft.collider == null || HitRight.collider == null) && !Flipped)
             {
                 FlipTheMonster();
+
                 Flipped = true;
             }
             if(HitLeft.collider != null && HitRight.collider != null)
@@ -107,13 +108,18 @@ namespace ArrowGame
 
         private void OnCollisionEnter2D(Collision2D other) 
         {
-            if(other.collider.tag == "Player" || other.collider.tag == "Platform")
+            if(other.collider.tag == GameConsts.PLAYER_TAG || other.collider.tag == GameConsts.PLATFORM_TAG)
             {
 
             }
             else
             {
                 FlipTheMonster();
+            }
+
+            if (other.collider.tag == GameConsts.BULLET_TAG)
+            {
+                Destroy(gameObject);
             }
         }
     }

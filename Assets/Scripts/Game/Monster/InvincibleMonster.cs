@@ -64,7 +64,7 @@ namespace ArrowGame
         private void OnTriggerStay2D(Collider2D other) 
         {
             // Shooting Code
-            if(other.gameObject.CompareTag("Player"))
+            if(other.gameObject.CompareTag(GameConsts.PLAYER_TAG))
             {
                 Effect.Play();
             } 
@@ -77,7 +77,7 @@ namespace ArrowGame
 
         private void OnTriggerExit2D(Collider2D other) 
         {
-            if(other.gameObject.CompareTag("Player"))
+            if(other.gameObject.CompareTag(GameConsts.PLAYER_TAG))
             {
                 Effect.Stop();
             } 
@@ -85,15 +85,15 @@ namespace ArrowGame
 
         private void OnCollisionEnter2D(Collision2D other) 
         {
-            if(other.collider.tag == "Platform" || other.collider.tag == "Bullet" || other.collider.tag == "Player")
+            if(other.collider.tag == GameConsts.PLATFORM_TAG || other.collider.tag == GameConsts.BULLET_TAG || other.collider.tag == GameConsts.PLAYER_TAG)
             {
 
             }
 
-            else
+            if (other.collider.tag == GameConsts.BULLET_TAG)
             {
-              
-
+                if (CanDie)
+                    Destroy(gameObject);
             }
             
         }

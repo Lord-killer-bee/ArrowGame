@@ -11,10 +11,12 @@ namespace ArrowGame.InGameEvents
     public class CreateMonsterEvent: GameEvent
     {
         public Vector3 spawnLocation;
+        public MonsterType monsterType;
 
-        public CreateMonsterEvent(Vector3 spawnLocation)
+        public CreateMonsterEvent(Vector3 spawnLocation, MonsterType monsterType)
         {
             this.spawnLocation = spawnLocation;
+            this.monsterType = monsterType;
         }
     }
 
@@ -38,5 +40,10 @@ namespace ArrowGame.InGameEvents
             this.activationPoint = activationPoint;
             this.inRange = inRange;
         }
+    }
+
+    public class PlayerKilledEvent : GameEvent
+    {
+        public PlayerKilledEvent() { }
     }
 }

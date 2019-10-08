@@ -85,13 +85,19 @@ namespace ArrowGame
 
         private void OnCollisionEnter2D(Collision2D other) 
         {
-            if(other.collider.tag == "Player" || other.collider.tag == "Platform")
+            if(other.collider.tag == GameConsts.PLAYER_TAG || other.collider.tag == GameConsts.PLATFORM_TAG)
             {
 
             }
             else
             {
                 FlipTheMonster();
+            }
+
+            if(other.collider.tag == GameConsts.BULLET_TAG)
+            {
+                //TODO :: Later use this part to remove a link for the boss invis monster
+                Destroy(gameObject);
             }
         }
     }

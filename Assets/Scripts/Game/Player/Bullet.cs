@@ -8,9 +8,7 @@ namespace ArrowGame
     {
         [SerializeField]
         private float _BulletVelocity = 50f;
-
-        //[SerializeField]
-        //private GameObject _MonsterPrefab;
+        private Transform SpawnLocation;
 
         private void OnEnable()
         {
@@ -25,35 +23,16 @@ namespace ArrowGame
             }
         }
 
-        private Transform SpawnLocation;
         private void OnCollisionEnter2D(Collision2D other)
         {
             SpawnLocation = other.gameObject.transform;
 
-            if (other.gameObject.CompareTag("Monster"))
+            if (other.gameObject.CompareTag(GameConsts.PLATFORM_TAG))
             {
-                Destroy(other.gameObject);
-            }
-
-            if (other.gameObject.CompareTag("Platform"))
-            {
-                GameEventManager.Instance.TriggerSyncEvent(new ArrowGame.InGameEvents.CreateMonsterEvent(SpawnLocation.position + new Vector3(0, 1, 0)));
-            }
-
-            if (other.gameObject.CompareTag("RammingMonster"))
-            {
-                if(other.gameObject.GetComponent<RammingMonster>().CanDie == true)
-                Destroy(other.gameObject);
-            }
-
-            if (other.gameObject.CompareTag("InvincibleMonster"))
-            {
-                if(other.gameObject.GetComponent<InvincibleMonster>().CanDie == true)
-                Destroy(other.gameObject);
+                GameEventManager.Instance.TriggerSyncEvent(new ArrowGame.InGameEvents.CreateMonsterEvent(SpawnLocation.position + new Vector3(0, 1, 0), MonsterType.SimpleMonster));
             }
 
             Destroy(gameObject);
-            
         }
     }
 }

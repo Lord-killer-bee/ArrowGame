@@ -8,8 +8,7 @@ TagManager:
   - Monster
   - PlatformBottom
   - Block
-  - RammingMonster
-  - InvincibleMonster
+  - Bullet
   layers:
   - Default
   - TransparentFX

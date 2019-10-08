@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 2201431215864113009}
   - component: {fileID: 2201431215864113010}
   - component: {fileID: 2201431215864113011}
-  - component: {fileID: 2201431215864113008}
   - component: {fileID: 6519872799234592994}
   - component: {fileID: 5515477742218941037}
+  - component: {fileID: 3953944074819850451}
   m_Layer: 0
-  m_Name: In_Minion
+  m_Name: InvincibleMinion
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,32 +102,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!61 &2201431215864113008
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2201431215864113006}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.07960367, y: 0.23879623}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 10, y: 10}
-    newSize: {x: 10, y: 10}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 7.2936945, y: 5.064995}
-  m_EdgeRadius: 0
 --- !u!50 &6519872799234592994
 Rigidbody2D:
   serializedVersion: 4
@@ -164,3 +138,19 @@ MonoBehaviour:
   moveSpeed: 200
   moveDistance: 20
   Raylength: 3
+--- !u!70 &3953944074819850451
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2201431215864113006}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 8, y: 5}
+  m_Direction: 1

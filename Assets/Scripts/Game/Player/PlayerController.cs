@@ -280,7 +280,7 @@ namespace ArrowGame
 
             for (int i = 0; i < groundedHits.Length; i++)
             {
-                if (groundedHits[i].collider.CompareTag("Platform") || groundedHits[i].collider.CompareTag("Monster") || groundedHits[i].collider.CompareTag("Block"))
+                if (groundedHits[i].collider.CompareTag(GameConsts.PLATFORM_TAG) || groundedHits[i].collider.CompareTag(GameConsts.MONSTER_TAG) || groundedHits[i].collider.CompareTag(GameConsts.BLOCK_TAG))
                 {
                     platformCount++;
                 }
@@ -291,7 +291,7 @@ namespace ArrowGame
 
             for (int i = 0; i < groundedHits.Length; i++)
             {
-                if (groundedHits[i].collider.CompareTag("Platform") || groundedHits[i].collider.CompareTag("Monster"))
+                if (groundedHits[i].collider.CompareTag(GameConsts.PLATFORM_TAG) || groundedHits[i].collider.CompareTag(GameConsts.MONSTER_TAG))
                 {
                     platformCount++;
                 }
@@ -321,7 +321,7 @@ namespace ArrowGame
 
                 for (int i = 0; i < almostGroundedHits.Length; i++)
                 {
-                    if (almostGroundedHits[i].collider.CompareTag("Platform"))
+                    if (almostGroundedHits[i].collider.CompareTag(GameConsts.PLATFORM_TAG))
                     {
                         platformCount++;
                     }
@@ -331,7 +331,7 @@ namespace ArrowGame
 
                 for (int i = 0; i < almostGroundedHits.Length; i++)
                 {
-                    if (almostGroundedHits[i].collider.CompareTag("Platform"))
+                    if (almostGroundedHits[i].collider.CompareTag(GameConsts.PLATFORM_TAG))
                     {
                         platformCount++;
                     }
@@ -472,26 +472,41 @@ namespace ArrowGame
 
         private void OnTriggerEnter2D(Collider2D collider)
         {
-            if (collider.CompareTag("PlatformBottom"))
+            if (collider.CompareTag(GameConsts.PLATFORM_BOTTOM_TAG))
             {
                 _collider.isTrigger = true;
             }
-            else if (collider.CompareTag("Platform"))
+            else if (collider.CompareTag(GameConsts.PLATFORM_TAG))
             {
                 phasing = true;
+            }
+
+            if(collider.tag == GameConsts.MONSTER_TAG)
+            {
+                GameEventManager.Instance.TriggerSyncEvent(new PlayerKilledEvent());
+                Destroy(gameObject);
             }
         }
 
         private void OnTriggerExit2D(Collider2D collider)
         {
-            if (collider.CompareTag("Platform") && phasing)
+            if (collider.CompareTag(GameConsts.PLATFORM_TAG) && phasing)
             {
                 _collider.isTrigger = false;
                 phasing = false;
             }
-            else if (collider.CompareTag("PlatformBottom") && !phasing)
+            else if (collider.CompareTag(GameConsts.PLATFORM_BOTTOM_TAG) && !phasing)
             {
                 _collider.isTrigger = false;
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.gameObject.tag == GameConsts.MONSTER_TAG)
+            {
+                GameEventManager.Instance.TriggerSyncEvent(new PlayerKilledEvent());
+                Destroy(gameObject);
             }
         }
 

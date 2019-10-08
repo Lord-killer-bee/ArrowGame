@@ -70,7 +70,7 @@ namespace ArrowGame
         private void OnCollisionEnter(Collision other)
         {
             print("collided");
-            if(other.transform.CompareTag("Player"))
+            if(other.transform.CompareTag(GameConsts.PLAYER_TAG))
             {
                 if(other.contacts[0].normal == Vector3.down)
                 other.transform.SetParent(transform);	
@@ -79,10 +79,16 @@ namespace ArrowGame
 
         private void OnCollisionExit(Collision other)
         {
-            if(other.transform.CompareTag("Player"))
+            if(other.transform.CompareTag(GameConsts.PLAYER_TAG))
             {
                 other.transform.SetParent(null);
             }	
+
+            if(other.collider.tag == GameConsts.BULLET_TAG)
+            {
+                //TODO :: Capture the monster later
+                Destroy(gameObject);
+            }
         }
     }
 }
