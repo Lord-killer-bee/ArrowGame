@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ArrowGame.InGameEvents;
+using Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,7 +48,7 @@ namespace ArrowGame
         /// </summary>
         protected override void OnMonsterDestroyed()
         {
-            //Broadcast an event to the player to activate an effect
+            GameEventManager.Instance.TriggerSyncEvent(new GrantAbilityEvent(PlayerAbilityType.SpeedMultiplier));
         }
 
         void ChangeState(MonsterState state)

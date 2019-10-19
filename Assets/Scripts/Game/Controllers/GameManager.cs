@@ -14,7 +14,7 @@ namespace ArrowGame
         {
             AddListeners();
 
-            DontDestroyOnLoad(this)
+            DontDestroyOnLoad(this);
         }
 
         private void OnDisable()

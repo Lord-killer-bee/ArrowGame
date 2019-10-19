@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ArrowGame.InGameEvents;
+using Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +35,7 @@ namespace ArrowGame
         {
             isActive = true;
             abilityTimeTracker = DateTime.Now;
+            GameEventManager.Instance.TriggerSyncEvent(new AbilityActivatedEvent(abilityType, abilityDuration));
         }
 
         private void Update()
@@ -52,6 +55,7 @@ namespace ArrowGame
         public void RestoreTheAbilityDuration()
         {
             abilityTimeTracker = DateTime.Now;
+            GameEventManager.Instance.TriggerSyncEvent(new AbilityActivatedEvent(abilityType, abilityDuration));
         }
     }
 }

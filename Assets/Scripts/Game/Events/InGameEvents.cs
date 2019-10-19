@@ -20,6 +20,9 @@ namespace ArrowGame.InGameEvents
         }
     }
 
+    /// <summary>
+    /// Sent when an ability is colected by the player
+    /// </summary>
     public class GrantAbilityEvent : GameEvent
     {
         public PlayerAbilityType abilityType;
@@ -30,6 +33,37 @@ namespace ArrowGame.InGameEvents
         }
     }
 
+    /// <summary>
+    /// Sent when an ability is activated by the player
+    /// </summary>
+    public class AbilityActivatedEvent : GameEvent
+    {
+        public PlayerAbilityType abilityType;
+        public float duration;
+
+        public AbilityActivatedEvent(PlayerAbilityType abilityType, float duration)
+        {
+            this.abilityType = abilityType;
+            this.duration = duration;
+        }
+    }
+
+    /// <summary>
+    /// Sent when an ability duration is completed
+    /// </summary>
+    public class AbilityDeactivatedEvent : GameEvent
+    {
+        public PlayerAbilityType abilityType;
+
+        public AbilityDeactivatedEvent(PlayerAbilityType abilityType)
+        {
+            this.abilityType = abilityType;
+        }
+    }
+
+    /// <summary>
+    /// Sent when an activation point went in or out of player's range
+    /// </summary>
     public class ActivationPointInRangeEvent : GameEvent
     {
         public ActivationPoint activationPoint;
