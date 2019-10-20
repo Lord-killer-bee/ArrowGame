@@ -80,4 +80,14 @@ namespace ArrowGame.InGameEvents
     {
         public PlayerKilledEvent() { }
     }
+
+    public class GameStartEvent : GameEvent
+    {
+        public GameStartEvent() { }
+    }
+
+    public class RoundCompletedEvent : GameEvent
+    {
+        public RoundCompletedEvent() { }
+    }
 }
