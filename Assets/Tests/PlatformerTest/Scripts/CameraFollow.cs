@@ -57,7 +57,7 @@ namespace PlatformerTest
 
             focusPosition.y = Mathf.SmoothDamp(transform.position.y, focusPosition.y, ref smoothVelocityY, verticalSmoothTime);
             focusPosition += Vector2.right * currentLookAheadX;
-            transform.position = (Vector3)focusPosition + Vector3.forward * -10;
+            transform.position = Vector3.Lerp(transform.position, (Vector3)focusPosition + Vector3.forward * -10, 0.2f);
         }
 
         void OnDrawGizmos()
