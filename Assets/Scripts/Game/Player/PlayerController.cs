@@ -29,7 +29,7 @@ namespace ArrowGame
 
         public bool isRotated = false;
 
-        private PlayerState playerState = PlayerState.None;
+        private PlayerAnimationState playerState = PlayerAnimationState.None;
         private PlayerLocation playerLocation = PlayerLocation.InAir;
 
         private RaycastHit2D[] groundedHits;
@@ -105,15 +105,15 @@ namespace ArrowGame
 
             if (Input.GetButtonDown(GameConsts.JUMP_CODE) && (playerLocation == PlayerLocation.Grounded || almostGrounded))
             {
-                ChangeState(PlayerState.Jump);
+                ChangeState(PlayerAnimationState.Jump);
             }
             else if (Input.GetAxis(GameConsts.HORIZONTAL_CODE) != 0 && playerLocation == PlayerLocation.Grounded)
             {
-                ChangeState(PlayerState.Run);
+                ChangeState(PlayerAnimationState.Run);
             }
             else if(Input.GetAxis(GameConsts.HORIZONTAL_CODE) == 0 && playerLocation == PlayerLocation.Grounded && !jumpBufferActive && !jumpStored)
             {
-                ChangeState(PlayerState.Idle);
+                ChangeState(PlayerAnimationState.Idle);
             }
 
             if(Input.GetButtonDown(GameConsts.FIRE_CODE))
@@ -128,10 +128,10 @@ namespace ArrowGame
 
             switch (playerState)
             {
-                case PlayerState.Run:
+                case PlayerAnimationState.Run:
                     Move(Input.GetAxis(GameConsts.HORIZONTAL_CODE));
                     break;
-                case PlayerState.Jump:
+                case PlayerAnimationState.Jump:
                     Jump();
                     break;
 
@@ -139,7 +139,7 @@ namespace ArrowGame
 
         }
 
-        void ChangeState(PlayerState state)
+        void ChangeState(PlayerAnimationState state)
         {
             if (playerState == state)
                 return;
@@ -148,19 +148,19 @@ namespace ArrowGame
 
             switch (state)
             {
-                case PlayerState.Idle:
+                case PlayerAnimationState.Idle:
                     _Anim.Play("Idle");
                     break;
-                case PlayerState.Run:
+                case PlayerAnimationState.Run:
                     _Anim.Play("Run");
                     break;
-                case PlayerState.Jump:
+                case PlayerAnimationState.Jump:
                     _Anim.Play("JumpStart");
                     break;
-                case PlayerState.Attack:
+                case PlayerAnimationState.Attack:
                     _Anim.Play("Fire");
                     break;
-                case PlayerState.Death:
+                case PlayerAnimationState.Death:
                     _Anim.Play("Death");
                     break;
             }
@@ -168,11 +168,11 @@ namespace ArrowGame
             playerState = state;
         }
 
-        private void OnExitState(PlayerState state)
+        private void OnExitState(PlayerAnimationState state)
         {
             switch (state)
             {
-                case PlayerState.Run:
+                case PlayerAnimationState.Run:
                     currentMoveSpeed = 0;
                     break;
             }
@@ -313,7 +313,7 @@ namespace ArrowGame
 
         private void CheckIfAlmostGrounded()
         {
-            if (playerState == PlayerState.Jump && !jumpBufferActive)
+            if (playerState == PlayerAnimationState.Jump && !jumpBufferActive)
             {
                 int platformCount = 0;
 

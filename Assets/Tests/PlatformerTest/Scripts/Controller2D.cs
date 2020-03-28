@@ -3,6 +3,9 @@ using System.Collections;
 
 namespace PlatformerTest
 {
+    /// <summary>
+    /// Responsible for handling collisions for an object that uses it
+    /// </summary>
     public class Controller2D : RaycastController
     {
 
@@ -17,14 +20,24 @@ namespace PlatformerTest
         {
             base.Start();
             collisions.faceDir = 1;
-
         }
 
+        /// <summary>
+        /// public accessor used by moving platforms to move its passengers
+        /// </summary>
+        /// <param name="moveAmount"></param>
+        /// <param name="standingOnPlatform"></param>
         public void Move(Vector2 moveAmount, bool standingOnPlatform)
         {
             Move(moveAmount, Vector2.zero, standingOnPlatform);
         }
 
+        /// <summary>
+        /// Moves the object, updates raycasts and checks for collisions
+        /// </summary>
+        /// <param name="moveAmount"></param>
+        /// <param name="input"></param>
+        /// <param name="standingOnPlatform"></param>
         public void Move(Vector2 moveAmount, Vector2 input, bool standingOnPlatform = false)
         {
             UpdateRaycastOrigins();
@@ -77,13 +90,13 @@ namespace PlatformerTest
 
                 if (hit)
                 {
-
-                    if (hit.distance == 0)
+                    /*if (hit.distance == 0)
                     {
                         continue;
-                    }
+                    }*/
 
                     float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+
 
                     if (i == 0 && slopeAngle <= maxClimbAngle)
                     {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace PlatformerTest
+namespace ArrowGame
 {
     [RequireComponent(typeof(BoxCollider2D))]
     public class RaycastController : MonoBehaviour
@@ -11,6 +11,7 @@ namespace PlatformerTest
 
         public const float skinWidth = .015f;
         const float dstBetweenRays = .25f;
+        const float dstSecondaryBottom = .3f;
         [HideInInspector]
         public int horizontalRayCount;
         [HideInInspector]
@@ -50,6 +51,9 @@ namespace PlatformerTest
             raycastOrigins.bottomRight = new Vector2(bounds.max.x, bounds.min.y);
             raycastOrigins.topLeft = new Vector2(bounds.min.x, bounds.max.y);
             raycastOrigins.topRight = new Vector2(bounds.max.x, bounds.max.y);
+
+            raycastOrigins.secondaryBottomLeft = new Vector2(bounds.min.x - dstSecondaryBottom, bounds.min.y);
+            raycastOrigins.secondaryBottomRight = new Vector2(bounds.max.x + dstSecondaryBottom, bounds.min.y);
         }
 
         /// <summary>
@@ -77,6 +81,7 @@ namespace PlatformerTest
         {
             public Vector2 topLeft, topRight;
             public Vector2 bottomLeft, bottomRight;
+            public Vector2 secondaryBottomLeft, secondaryBottomRight;//this is for a buffer to jump from the edge
         }
     }
 }

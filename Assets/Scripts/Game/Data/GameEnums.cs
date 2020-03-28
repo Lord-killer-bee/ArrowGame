@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PlayerState
+public enum PlayerAnimationState
 {
     None = 0,
     Idle,
@@ -51,4 +51,10 @@ public enum AbilityActivationMode
     None,
     AutoActivation,
     ManualActivation
+}
+
+public enum ObjectType
+{
+    None,
+    Player
 }
